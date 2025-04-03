@@ -4,12 +4,14 @@ use strict;
 
 use Encode qw(decode encode);
 
-use HTML::Tidy;
-my $tidy = HTML::Tidy->new();
+use HTML::TreeBuilder;
+use HTML::Scrubber;
 
+my $tidy = HTML::TreeBuilder->new();
+my $scrubber = HTML::Scrubber->new;
 sub tidySnippet {
   my $snippet = shift;
-  my $document = $tidy->clean($snippet);
+  my $document = $scrubber->scrub($snippet);
   if ($document =~ /<body>(.*)<\/body>/mis) {
     return $1;
   }
